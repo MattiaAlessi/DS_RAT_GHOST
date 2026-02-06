@@ -51,7 +51,7 @@ python main.py
 ```
 
 
-- Available Commands
+## Available Commands
   In any channel:
 
 - !commands → Show command list
