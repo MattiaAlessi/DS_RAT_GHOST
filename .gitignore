@@ -1,0 +1,88 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+bin/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib64/
+*.manifest
+*.spec
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env
+.venv/
+env.bak/
+venv.bak/
+
+# Build artifacts (PyInstaller, Nuitka, etc.)
+dist/
+build/
+*.exe
+*.spec
+nuitka-output/
+onefile/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+temp/
+tmp/
+
+# IDE / Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.sublime-workspace
+*.sublime-project
+
+# macOS / Windows junk
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Project-specific sensitive files
+.env
+.env.example
+*.key
+*.pem
+*.crt
+*.token
+
+# Testing / coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+.tox/
+nosetests.xml
+
+# Database / local data
+*.sqlite3
+*.db
+*.db-journal
+
+# Miscellaneous
+*.bak
+*.swp
+*.~*
