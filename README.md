@@ -50,6 +50,15 @@ N.B. Get your token from: https://discord.com/developers/applications
 python main.py
 ```
 
+3) TO create a executable file run:
+```bash
+pyinstaller --onefile --noconsole
+  --name "Updater"
+  --add-data ".env;."
+  --upx-dir "C:\upx"
+  main.py
+  ```
+
 
 ## Available Commands
   In any channel:
