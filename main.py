@@ -10,23 +10,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-if not TOKEN:
-    print("Error: DISCORD_TOKEN not found in .env file")
-    exit(1)
 
-if not TOKEN:
-    print("Error: DISCORD_TOKEN not found in .env file")
-    exit(1)
+# commented cause it generates an error when .exe is run without .env file, but you can uncomment for debugging in IDE
+# if not TOKEN:
+#     print("Error: DISCORD_TOKEN not found in .env file")
+    
 
 
 DOWNLOAD_FOLDER = "C:/DiscordDownloads"
@@ -263,5 +252,11 @@ async def on_message(message):
 
     await bot.process_commands(message)
 
-
-bot.run(TOKEN)
+if __name__ == "__main__":
+    try:
+        bot.run(TOKEN)
+    except KeyboardInterrupt:
+        print("\nBot stopped by user")
+    except Exception as e:
+        print(f"Fatal error: {e}")
+        input("Press Enter to exit...")
