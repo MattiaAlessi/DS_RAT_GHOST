@@ -2,6 +2,17 @@
 
 **G.H.O.S.T.** (Ghost Hidden Operator Stealth Tool) is a proof-of-concept Discord bot that provides remote access and control over a Windows machine via Discord messages.
 
+This project is a **modified and improved version** of the RAT demonstrated in [this](https://www.youtube.com/watch?v=7eaFEZnuh0I) YouTube tutorial
+
+I watched the video, followed the core idea, and added several enhancements such as:
+- Token loading from `.env`
+- Non-blocking PowerShell execution with timeout
+- Better error handling
+- Screenshot feature
+- File upload/download commands
+- Clean builder support
+
+
 **DISCLAIMER**  
 This tool is intended **ONLY for educational purposes, security research, and authorized testing** on systems you own or have explicit written permission to access.  
 Unauthorized use on any system is illegal in most jurisdictions (e.g., unauthorized access, computer fraud, privacy violations).  
@@ -37,20 +48,21 @@ pip install -r requirements.txt
 
 ```bash
 git clone https://github.com/MattiaAlessi/DS_RAT_GHOST.git
+cd DS_RAT_GHOST
 
-#copy and add your credentials
-cp .env.example .env
+# Copy the example file and add your credentials
+copy .env.example .env
 ```
+Edit .env and insert your real Discord bot token from [this](https://discord.com/developers/applications) link 
 
-N.B. Get your token from: https://discord.com/developers/applications
-
-2) Run the bot:
+2) Run the bot directly (only for testing):
 
 ```bash
 python main.py
 ```
 
-3) TO create a executable file run:
+3) Build Standalone Executable (Recommended)  
+   To create a single-file .exe (no console window):
 ```bash
 pyinstaller --onefile --noconsole
   --name "Updater"
@@ -61,16 +73,17 @@ pyinstaller --onefile --noconsole
 
 
 ## Available Commands
-  In any channel:
+**In any channel**:
 
 - !commands → Show command list
 - !screenshot → Capture and upload desktop screenshot
 - !load [folder] → Save attachments from the message to the PC
 - !download <path> → Upload file from PC to Discord
 
-In the control channel (control-xxx.xxx.xxx.xxx):
+**In the control channel (control-xxx.xxx.xxx.xxx)**:
 
-- Any valid PowerShell command directly (no prefix needed)
+  Any valid PowerShell command directly (no prefix needed)
+
   Examples:
 - whoami
 - Get-Process
@@ -78,16 +91,18 @@ In the control channel (control-xxx.xxx.xxx.xxx):
 - Start-Sleep -s 10
 
 
-Persistence
-The script runs only while active.
-Persistence (auto-start on boot/login) is not included by default.
-Common methods to add it manually:
 
-Copy the script/exe to Startup folder
-Add to Registry (HKCU\Software\Microsoft\Windows\CurrentVersion\Run)
-Create a scheduled task (schtasks)
 
-Security & Legal Notes
+**Persistence** (not yet included)
+The bot runs only while the process is active.
+Persistence (auto-start on boot/login) is not implemented by default.
+Common manual methods:
+
+- Copy the .exe to Startup folder "C:\Users\<YourUser>\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup"
+- Add to Registry "HKCU\Software\Microsoft\Windows\CurrentVersion\Run"
+- Create a scheduled task (schtasks)
+
+## Security & Legal Notes
 
 Use responsibly — only on systems you own or have clear authorization for
 Always test in a clean virtual machine first
