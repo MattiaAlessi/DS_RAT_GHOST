@@ -62,7 +62,6 @@ desktop.ini
 
 # Project-specific sensitive files
 .env
-.env.example
 *.key
 *.pem
 *.crt

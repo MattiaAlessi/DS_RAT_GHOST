@@ -7,16 +7,29 @@ import pyautogui
 from io import BytesIO
 import asyncio
 from dotenv import load_dotenv
+import sys
 
-load_dotenv()
+
+def load_env():
+    """Use this function to load the .env file correctly whether running as a script or as a PyInstaller executable"""
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.dirname(__file__)
+
+    env_path = os.path.join(base_path, ".env")
+    load_dotenv(env_path)
+
+
+load_env()
+
 
 TOKEN = os.getenv('DISCORD_TOKEN')
 
-# commented cause it generates an error when .exe is run without .env file, but you can uncomment for debugging in IDE
-# if not TOKEN:
-#     print("Error: DISCORD_TOKEN not found in .env file")
-    
 
+if not TOKEN:
+    print("Error: DISCORD_TOKEN not found in .env file")
+    
 
 DOWNLOAD_FOLDER = "C:/DiscordDownloads"
 
