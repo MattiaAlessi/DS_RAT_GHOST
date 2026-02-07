@@ -20,20 +20,22 @@ The author is not responsible for any misuse, damage, or legal consequences resu
 
 ## Features
 
-- Loads Discord bot token from `.env` (no hard-coded token)
-- Creates a private control channel named `control-<your-public-ip>`
-- Executes arbitrary **PowerShell commands** directly in the control channel (no prefix needed)
-- Downloads files from Discord messages to the target PC (`!load [optional_folder]`)
-- Uploads files from the target PC to Discord (`!download <path>`)
-- Captures and uploads screenshots (`!screenshot`)
-- Non-blocking command execution with **timeout** to prevent freezing
-- Stealth-oriented (no console window when built as executable)
+- **Stealth Operation**: Creates hidden control channel with IP-based naming
+- **PowerShell Integration**: Persistent PowerShell session for command execution
+- **File Management**: Upload/download files between Discord and target system
+- **Screen Capture**: Take screenshots remotely
+- **Process Control**: Start/kill applications and processes
+- **Keylogging**: Capture keystrokes (optional module required)
+- **Mouse & Keyboard Control**: Remote typing and mouse operations
+- **System Information**: Get detailed system specs and status
+- **Error Handling**: Graceful fallbacks for missing modules
 
 ## Requirements
 
 - Windows (tested on Windows 10/11)
 - Python 3.10+
 - Internet connection
+- Discord bot token
 
 Install dependencies:
 
@@ -84,15 +86,13 @@ pyinstaller --onefile --noconsole
 
 **In the control channel (control-xxx.xxx.xxx.xxx)**:
 
-  Any valid PowerShell command directly (no prefix needed)
-
-  Examples:
-- whoami
-- Get-Process
-- dir
-- Start-Sleep -s 10
-
-
+- PowerShell Commands: Type directly without prefix (e.g., whoami, Get-Process, dir)
+- !kill <process_name> → Terminate process by name
+- !start <app_name> → Start application
+- !type <text> → Type text remotely
+- !press <key> → Press key or key combination (e.g., enter, ctrl+c, alt+f4)
+- !click <button> <count> → Click mouse button multiple times
+- !keylog start|stop|clear|show → Keylogger controls
 
 
 **Persistence** (not yet included)
